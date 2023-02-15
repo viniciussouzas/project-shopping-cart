@@ -12,7 +12,12 @@ export const fetchProductsList = async ($QUERY) => {
   const joinURL = `${API_URL}${$QUERY}`;
 
   const response = await fetch(joinURL);
+
   const data = await response.json();
+
+  if (data.error) {
+    throw new Error('Algum erro ocorreu, recarregue a página e tente novamente');
+  }
 
   return data.results;
 };
