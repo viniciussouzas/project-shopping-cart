@@ -1,7 +1,15 @@
-const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=';
+const LIST_API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=';
 
-export const fetchProduct = () => {
-  // seu código aqui
+const ID_API_URL = 'https://api.mercadolibre.com/items/';
+
+export const fetchProduct = async ($ProductID) => {
+  if (!$ProductID) {
+    throw new Error('ID não informado');
+  }
+  const response = await fetch(`${ID_API_URL}${$ProductID}`);
+  const data = await response.json();
+
+  return data;
 };
 
 export const fetchProductsList = async ($QUERY) => {
@@ -9,15 +17,9 @@ export const fetchProductsList = async ($QUERY) => {
     throw new Error('Termo de busca não informado');
   }
 
-  const joinURL = `${API_URL}${$QUERY}`;
-
-  const response = await fetch(joinURL);
+  const response = await fetch(`${LIST_API_URL}${$QUERY}`);
 
   const data = await response.json();
-
-  if (data.error) {
-    throw new Error('Algum erro ocorreu, recarregue a página e tente novamente');
-  }
 
   return data.results;
 };
