@@ -1,9 +1,12 @@
+import { getSavedCartIDs } from './helpers/cartFunctions';
 import { searchCep } from './helpers/cepFunctions';
-import { fetchProductsList } from './helpers/fetchFunctions';
-import { createCustomElement, createProductElement } from './helpers/shopFunctions';
+import { fetchProduct, fetchProductsList } from './helpers/fetchFunctions';
+import { createCartProductElement,
+  createCustomElement, createProductElement } from './helpers/shopFunctions';
 import './style.css';
 
 const productsList = document.querySelector('.products');
+const cartProducts = document.querySelector('.cart__products');
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 
@@ -32,4 +35,18 @@ const listProducts = async ($QUERY) => {
   }
 };
 
+const recoverSaved = async () => {
+  const cartIds = getSavedCartIDs();
+
+  const solvePromises = await Promise.all(cartIds.map((id) => fetchProduct(id)));
+
+  solvePromises.forEach((promise) => {
+    const create = createCartProductElement(promise);
+
+    cartProducts.appendChild(create);
+  });
+};
+
 listProducts('computador');
+
+recoverSaved();
